@@ -1,5 +1,5 @@
 # Arnold-Render-Setup-Gizmo
-Arnold Render Setup Gizmo[^1] is a Maya tool designed to speed up render setup by automating common Arnold configuration tasks. It streamlines AOV management, light group setup, and file/render settings, helping artists get to final renders faster and with fewer errors. This project was created in 2023. <br>
+Arnold Render Setup Gizmo[^1] is a Maya tool designed to speed up render setup by automating common Arnold configuration tasks. It streamlines AOV management, light group setup, and file/render settings, helping artists get to final renders faster and with fewer errors.<br>
 ![Screenshot of the tool window and camera rig.](full.png)
 
 
