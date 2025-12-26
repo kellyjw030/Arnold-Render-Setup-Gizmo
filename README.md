@@ -1,37 +1,53 @@
 # Arnold-Render-Setup-Gizmo
-Arnold Render Setup Gizmo[^1] is a Maya tool designed to speed up render setup by automating common Arnold configuration tasks. It streamlines AOV management, light group setup, and file/render settings, helping artists get to final renders faster and with fewer errors.<br>
+Arnold Render Setup Gizmo is a Maya tool designed to speed up render setup by automating common Arnold configuration tasks. It streamlines AOV management, light group setup, and file/render settings, helping artists get to final renders faster and with fewer errors.<br>
 ![Screenshot of the tool window and camera rig.](full.png)
-
 
 ## Features:
 ### Render & AOV Setup
-- Single-frame render setup with automatic creation of common compositing AOVs
+Quickly prepares a single-frame render setup and automatic creation of common compositing AOVs
+- With one click, the tool automatically:
+  - Sets the output file format to `.exr`
+  - Sets the output file name to the scene name (`<Scene>`)
+  - Enables `Merge AOVs`
+  - Sets the resolution to HD 1080 (1920×1080)
+  - Adds common AOVS (`RGBA`, `Z`, `N`, `P`, `crypto_asset`)
 
 ### Reset AOVs
-- Removing all AOVs (including light groups) except for RGBA
+- Removes all AOVs, including light groups, except for RGBA
 
 ### Auto add or update existing light groups
+- Detects all Light Group names assigned to lights in the scene
+- Automatically creates matching Light Group AOVs
+- Clicking this after changes to the Light Groups (such as adding new ones or renaming) updates light groups present in the AOVs, keeping it up to date
 - Works with both visible and hidden lights
 
-### Add or remove look dev AOVs for lighting and shading breakdowns
-- Supports Diffuse, Specular, SSS, Transmission AOVs
 
-### Camera Rig
-- Supports all camera movements (pan, boom, truck, dolly, roll, tilt, and overall position)
-- Built-in measurement tool for depth-of-field focal distance <br>
+### Add or remove look dev AOVs for lighting and shading breakdowns
+- Quickly add or remove common look-dev passes for shading breakdowns:
+- Supports `Diffuse`, `Specular`, `SSS`, and `Transmission` AOVs
+
+### Advanced Camera Rig
+A production-friendly camera rig designed for clean animation and accurate depth of field.
+Features include:
+- Realistic camera controls:
+  - Pan
+  - Boom
+  - Truck
+  - Dolly
+  - Roll
+  - Tilt
+  - Global position
+- Built-in measurement tool for accurate depth-of-field focal distance <br>
 
 ### Workflow Benefits:
-- Eliminate the arduous process of adding light groups with Arnold
-- Better control of camera movements, cleaner animation
-- Accurate DOF
-- Faster overall render preparation, fewer manual setup mistakes 
+- Faster render setup with fewer manual steps
+- Eliminates repetitive Arnold AOV configuration
+- Cleaner camera animation and easier control
+- Accurate depth of field
+- Reduced setup errors and increased consistency across shots
 
 
 ## Possible future plans:
+- Auto integration of the Locator's point to the Camera's focus distance.
 - Render layer presets:
-  - Ambient Occlusion
   - Wireframe
-  - Clay render with displacement/ bump (for breakdowns)
-
-
-[^1]: This project was done in 2023.
