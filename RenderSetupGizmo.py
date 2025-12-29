@@ -208,7 +208,7 @@ def setup():
     cmds.setAttr('defaultArnoldDriver.ai_translator', 'exr', type = 'string') # file type
     cmds.setAttr('defaultRenderGlobals.imageFilePrefix', '<Scene>', type = 'string') # file name
     setHD(1920, 1080)
-    addAOVs(['RGBA', 'crypto_asset', 'Z', 'N', 'P'])
+    addAOVs(['RGBA', 'Z', 'N', 'P'])
 
 
 def resetAOVs():
@@ -229,10 +229,30 @@ def addAOVs(req_aovs):
         
         # add required AOVs only if they are not active
         if aiAOV_aovName not in aiAOV_activeAOVs:
-            aovs.AOVInterface().addAOV(name)
+            aovVar = aovs.AOVInterface().addAOV(name)
+            #aovVar.attr("enabled").set(True)
             print(aiAOV_aovName + ' AOV added.')
         else:
             print(aiAOV_aovName + ' already exists.')
+            
+def addCryptomatte(cryptomatteAOVNames):
+    # create a cryptomatte shader
+    activeCryptomatteNode = cmds.ls(type='cryptomatte')
+    if not activeCryptomatteNode:
+        cmds.createNode('cryptomatte', n='_aov_cryptomatte')
+    
+    aiAOV_activeAOVs = cmds.ls(type='aiAOV')
+    
+    for cryptoName in cryptomatteAOVNames:
+        # add required AOVs only if they are not active
+        if "aiAOV_" + cryptoName not in aiAOV_activeAOVs:
+            aovVar = aovs.AOVInterface().addAOV(cryptoName)
+            cmds.defaultNavigation(connectToExisting=True, d=f'aiAOV_{cryptoName}.defaultValue', source='_aov_cryptomatte')
+            cmds.connectAttr('_aov_cryptomatte.outColor', f'aiAOV_{cryptoName}.defaultValue', force=True)
+            print(cryptoName + ' AOV added.')
+        else:
+            print('Cryptomatte already exists.')
+
 
 def toggleSelectedAOVs(selectedAOVNames):
     # remove all AOVs with RGBA_ (light groups having RGBA_ prefix)
@@ -308,30 +328,43 @@ def createWindow(title, windowLabel):
         cmds.deleteUI(title)
         
     # Creates window
-    cmds.window(title, w = 290, title = windowLabel, menuBar = True)
+    cmds.window(title, w = 100, title = windowLabel, menuBar = True)
     cmds.columnLayout(adjustableColumn = True, rowSpacing = 3)
     
     
     # Render setup (Renderer, File name, file type, common AOVs, Light groups)
-    cmds.text(label = "Arnold Render Setup Gizmo", fn = 'boldLabelFont', h = 30)
-
+    cmds.text(label = "Arnold Render Setup Gizmo", fn = 'boldLabelFont')
     cmds.text(label = "\nPrepare Render Settings (Single Frame)", font='boldLabelFont')
-    cmds.button(l='Render Setup + Add Common AOVs', command = 'setup()', h = 40)
-    setupDetails = "Set renderer to Arnold\nMerge AOVs\nSet file type to EXR\nSet file name to <Scene>\nSet the resolution to HD1080\nAdd common AOVs (RGBA, Z, P, N, crypto_asset)"
-    cmds.text(label = "\nDoes the following:\n", al='left', font='boldLabelFont')
+    
+    cmds.rowLayout(numberOfColumns=2, gsp=15, cl2=['left', 'right'], mar=5)
+    cmds.button(l='Render Setup + Add Common AOVs', command = 'setup()', h = 100, w = 220)
+    setupDetails = "Set renderer to Arnold\nMerge AOVs\nSet file type to EXR\nSet file name to <Scene>\nSet the resolution to HD1080\nAdd common AOVs:\n(RGBA, Z, P, N)"
     cmds.text(label = setupDetails, al='left')
+    cmds.setParent('..')
     
     
-    cmds.text(label = "\nInit/ Update Light Groups (incl. removing unused)", font='boldLabelFont')
-    cmds.button(l='Update Light Groups', command = 'updateLightGroups()', h = 40) 
+    cmds.rowLayout(numberOfColumns=2, gsp=15, mar=5)
+    cmds.button(l='Update Light Groups', command = 'updateLightGroups()', h = 40, w = 220) 
+    cmds.button(l='Toggle Lookdev AOVs', command = 'toggleLookDevAOVs()', h = 40, w = 220) 
+    cmds.setParent('..')
+    
+    cmds.rowLayout(numberOfColumns=2, gsp=15, mar=5)
+    cmds.button(l='Add Cryptomatte', command = 'addCryptomatte(["crypto_asset", "crypto_material", "crypto_object"])', h = 60, w = 220) 
+    cmds.text(label = 'Adds:\ncrypto_asset,\ncrypto_material,\ncrypto_object', al='left')
+    cmds.setParent('..')
+    
+    
+    #cmds.text(label = "\nInit/ Update Light Groups (incl. removing unused)", font='boldLabelFont')
+    #cmds.button(l='Update Light Groups', command = 'updateLightGroups()', h = 40) 
     
 
-    cmds.button(l='Toggle Lookdev AOVs', command = 'toggleLookDevAOVs()', h = 40) 
-    lookdevAOVDetails = "\nToggles the following AOVs:"
-    cmds.text(label = lookdevAOVDetails, font='boldLabelFont', al='left')
-    cmds.text(label = "diffuse, specular, sss, transmission", al='left')
-    line_separator = cmds.separator(style='in', height=10)
+    #cmds.button(l='Toggle Lookdev AOVs', command = 'toggleLookDevAOVs()', h = 40) 
+    #lookdevAOVDetails = "\nToggles the following AOVs:"
+    #cmds.text(label = lookdevAOVDetails, font='boldLabelFont', al='left')
+    #cmds.text(label = "diffuse, specular, sss, transmission", al='left')
+    #line_separator = cmds.separator(style='in', height=10)
     
+    line_separator = cmds.separator(style='in', height=10)
     cmds.button(l='Reset AOVs', command = 'resetAOVs()', h = 40) 
     line_separator = cmds.separator(style='in', height=10)
 
@@ -340,7 +373,7 @@ def createWindow(title, windowLabel):
     cmds.text(label = "Create Camera Rig", font='boldLabelFont')
     cmds.text(label = "IMPORTANT! Do not edit the renderCAM group name.")
     cmds.button(l='Make Camera', command = "checkSetup('renderCAM')", h = 40) 
-    
+    line_separator = cmds.separator(style='in', height=10)
     
     # Remove render Camera Rig
     #cmds.text(label = "\nRemove Camera Rig")
