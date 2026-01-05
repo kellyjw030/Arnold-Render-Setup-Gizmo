@@ -37,7 +37,7 @@ Features include:
   - Roll
   - Tilt
   - Global position
-- Built-in measurement tool for accurate depth-of-field focal distance <br>
+- Built-in locator that measures the depth-of-field automatically and connects to the camera's focal distance input<br>
 
 ### Workflow Benefits:
 - Faster render setup with fewer manual steps

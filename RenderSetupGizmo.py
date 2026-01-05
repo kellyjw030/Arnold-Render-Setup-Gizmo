@@ -162,23 +162,23 @@ def cameraSetup():
     cmds.delete('distanceDimension1')
     
     
+def dofSetup():
     # Depth of field setup
     cmds.setAttr('renderCam_vShape1.depthOfField', 1)
     cmds.setAttr('renderCam_vShape1.aiEnableDOF', 1)
     cmds.connectAttr('distanceDimensionShape1.distance', 'renderCam_vShape1.focusDistance', force=True)
     cmds.connectAttr('distanceDimensionShape1.distance', 'renderCam_vShape1.aiFocusDistance', force=True)
-
-
-
+    
 # Add camera rig
 def checkSetup(name):
     if cmds.objExists(name):
         print('An object called renderCAM already exists!')
     else:
         cameraSetup()
+        dofSetup()
         print('renderCAM succesfully set up!')
-        
-        
+            
+            
 # Remove camera rig
 def checkRemove(name):
     if cmds.objExists(name):
