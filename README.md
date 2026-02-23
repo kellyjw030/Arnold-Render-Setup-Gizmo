@@ -1,5 +1,5 @@
 # Arnold-Render-Setup-Gizmo
-Arnold Render Setup Gizmo is a Maya tool designed to speed up render setup by automating common Arnold configuration tasks. It streamlines AOV management, light group setup, and file/render settings, helping artists get to final renders faster and with fewer errors.<br>
+Arnold Render Setup Gizmo is a Maya tool designed to speed up render setup by automating common Arnold configuration tasks. Streamlines AOV management, light group setup, and file/render settings.<br>
 ![Screenshot of the tool window and camera rig.](full-updated.png)
 
 ## Features:
@@ -39,15 +39,6 @@ Features include:
   - Global position
 - Built-in locator that measures the depth-of-field automatically and connects to the camera's focal distance input<br>
 
-### Workflow Benefits:
-- Faster render setup with fewer manual steps
-- Eliminates repetitive Arnold AOV configuration
-- Cleaner camera animation and easier control
-- Accurate depth of field
-- Reduced setup errors and increased consistency across shots
-
-
 ## Possible future plans:
-- Auto integration of the Locator's point to the Camera's focus distance.
 - Render layer presets:
   - Wireframe
